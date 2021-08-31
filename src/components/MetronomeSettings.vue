@@ -69,6 +69,14 @@
           </div>
         </div>
       </li>
+      <li class="pt-8">
+        <div class="form-control">
+          <label class="cursor-pointer label">
+            <span class="label-text">Count in</span>
+            <input type="checkbox" class="checkbox" v-model="countIn">
+          </label>
+        </div>
+      </li>
     </ul>
   </div>
 </div>
@@ -82,7 +90,7 @@ import SettingsButton from './SettingsButton.vue'
 
 export default {
   components: { SettingsButton },
-  emits: ["bpm", "keys", "key-beats", "key-bars"],
+  emits: ["bpm", "keys", "key-beats", "key-bars", "count-in"],
   setup(props, { emit }) {
     // BPM Settings
     const bpm = ref(120)
@@ -96,10 +104,13 @@ export default {
     // Metre settings
     const beats = ref(4)
     const bars = ref(1)
+    const countIn = ref(false)
+
     watch(beats, () => { emit('key-beats', beats.value) })
     watch(bars, () => { emit('key-bars', bars.value) })
+    watch(countIn, () => { emit('count-in', countIn.value) })
 
-    return { bpm, bpmRange, keys, beats, bars }
+    return { bpm, bpmRange, keys, beats, bars, countIn }
   }
 }
 </script>

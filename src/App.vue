@@ -1,8 +1,9 @@
 <template>
   <div data-theme="bumblebee">
   <welcome-modal />
-    <div class="flex min-w-screen min-h-screen bg-base-100">
-      <metronome-settings class="absolute top-0 right-0 h-fill" v-on:bpm="setBpm" v-on:keys="setKeys" v-on:key-beats="setBeats" v-on:key-bars="setBars">
+  <count-in-overlay v-if="showCountInOverlay" :step="nBeats - step + 1"/>
+    <div class="flex min-w-screen min-h-screen bg-base-100" :class="{ 'filter blur-md': showCountInOverlay }">
+      <metronome-settings class="absolute top-0 right-0 h-fill" v-on:bpm="setBpm" v-on:keys="setKeys" v-on:key-beats="setBeats" v-on:key-bars="setBars" v-on:count-in="setCountIn">
         <div class="flex flex-col items-center justify-center w-96 h-96 rounded-full border-2 border-base-content m-auto">
           <div class="h-24"></div>
           <div class="h-12 w-48">
@@ -26,7 +27,7 @@
 </template>
 
 <script>
-import { computed, onMounted, ref } from '@vue/runtime-core'
+import { computed, ref } from '@vue/runtime-core'
 import KeyDisplay from "./components/KeyDisplay.vue"
 import MetronomeDisplay from "./components/MetronomeDisplay.vue"
 import MetronomeSettings from "./components/MetronomeSettings.vue"
@@ -35,6 +36,7 @@ import PlayButton from "./components/PlayButton.vue"
 import StopButton from "./components/StopButton.vue"
 import WelcomeModal from "./components/WelcomeModal.vue"
 import BarDisplay from "./components/BarDisplay.vue"
+import CountInOverlay from "./components/CountInOverlay.vue"
 
 const baseKeys = ["C", "D", "E", "F", "G", "A", "B"]
 const flatKeys = ["B♭", "E♭", "A♭", "D♭", "G♭"]
@@ -57,6 +59,7 @@ export default {
     const bpm = ref(120)
     const nBeats = ref(4)
     const nBars = ref(1)
+    const countIn = ref(false)
 
     const synthOpts = {
       oscillator: { type: "triangle" },
@@ -84,6 +87,7 @@ export default {
       if (playing.value) {
         Transport.stop()
         step.value = 0
+        bar.value = countIn.value ? 0 : 1
       } else {
         start()
         Transport.bpm.value = bpm.value
@@ -94,14 +98,6 @@ export default {
       playing.value = !playing.value
     }
 
-    onMounted(() => {
-      window.addEventListener("keydown", (e) => {
-        if (e.code === "Space") {
-          toggle()
-        }
-      })
-    })
-
     const playButtonText = computed(() => playing.value ? "stop" : "play")
 
     // settings
@@ -109,6 +105,7 @@ export default {
       bpm.value = v
       Transport.bpm.value = v
     }
+
     const setKeys = (v) => {
       if (v == 1) {
         keySource.value = [baseKeys, flatKeys].flat()
@@ -128,10 +125,16 @@ export default {
       nBars.value = +v
     }
 
-    return { playing, toggle, playButtonText, keys, step, bar, setBpm, setKeys, nBeats, nBars, setBeats, setBars }
+    const setCountIn = (v) => {
+      countIn.value = v
+      bar.value = 0
+    }
+
+    const showCountInOverlay = computed(() => playing.value && countIn.value && bar.value == 0 && step.value > 0)
+    return { playing, toggle, playButtonText, keys, step, bar, countIn, setBpm, setKeys, nBeats, nBars, setBeats, setBars, setCountIn, showCountInOverlay }
   },
   components: {
-    KeyDisplay, MetronomeDisplay, MetronomeSettings, PlayButton, StopButton, WelcomeModal, BarDisplay
+    KeyDisplay, MetronomeDisplay, MetronomeSettings, PlayButton, StopButton, WelcomeModal, BarDisplay, CountInOverlay
   }
 }
 </script>
