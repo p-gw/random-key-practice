@@ -5,6 +5,7 @@
     <label for="settings-drawer" class="absolute top-0 left-0 m-6 btn btn-neutral drawer-button">
       <settings-button />
     </label>
+    <slot></slot>
   </div>
   <div class="drawer-side">
     <label for="settings-drawer" class="drawer-overlay"></label>

@@ -2,7 +2,7 @@
   <div data-theme="bumblebee">
   <welcome-modal />
     <div class="flex min-w-screen min-h-screen bg-base-100">
-      <metronome-settings class="absolute top-0 right-0 h-fill" v-on:bpm="setBpm" v-on:keys="setKeys" v-on:key-beats="setBeats" v-on:key-bars="setBars" />
+      <metronome-settings class="absolute top-0 right-0 h-fill" v-on:bpm="setBpm" v-on:keys="setKeys" v-on:key-beats="setBeats" v-on:key-bars="setBars">
         <div class="flex flex-col items-center justify-center w-96 h-96 rounded-full border-2 border-base-content m-auto">
           <div class="h-24"></div>
           <div class="h-12 w-48">
@@ -14,12 +14,13 @@
             <metronome-display :n_beats="nBeats" :active="step"/>
           </div>
           <div class="flex items-center h-24">
-            <a href="#" class="btn btn-primary" @click="toggle">
+            <button class="btn btn-primary" role="button" @click="toggle">
               <stop-button v-if="playing"/>
               <play-button v-else />
-            </a>
+            </button>
           </div>
         </div>
+      </metronome-settings>
     </div>
   </div>
 </template>
