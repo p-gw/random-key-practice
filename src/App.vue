@@ -1,6 +1,5 @@
 <template>
   <div data-theme="bumblebee">
-  <welcome-modal />
   <count-in-overlay v-if="showCountInOverlay" :step="nBeats - step + 1"/>
     <div class="flex min-w-screen min-h-screen bg-base-100" :class="{ 'filter blur-md': showCountInOverlay }">
       <metronome-settings class="absolute top-0 right-0 h-fill" v-on:bpm="setBpm" v-on:keys="setKeys" v-on:key-beats="setBeats" v-on:key-bars="setBars" v-on:count-in="setCountIn">
@@ -34,7 +33,6 @@ import MetronomeSettings from "./components/MetronomeSettings.vue"
 import { start, Transport, Synth } from 'tone'
 import PlayButton from "./components/PlayButton.vue"
 import StopButton from "./components/StopButton.vue"
-import WelcomeModal from "./components/WelcomeModal.vue"
 import BarDisplay from "./components/BarDisplay.vue"
 import CountInOverlay from "./components/CountInOverlay.vue"
 
@@ -134,7 +132,7 @@ export default {
     return { playing, toggle, playButtonText, keys, step, bar, countIn, setBpm, setKeys, nBeats, nBars, setBeats, setBars, setCountIn, showCountInOverlay }
   },
   components: {
-    KeyDisplay, MetronomeDisplay, MetronomeSettings, PlayButton, StopButton, WelcomeModal, BarDisplay, CountInOverlay
+    KeyDisplay, MetronomeDisplay, MetronomeSettings, PlayButton, StopButton, BarDisplay, CountInOverlay
   }
 }
 </script>
